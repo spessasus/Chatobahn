@@ -1,13 +1,7 @@
 <?php
 
-// laczenie z baza
-/*try {*/
+// CHANGE THESE
 $baza = mysqli_connect("localhost", "root", "", "chatobahn") or die("Internal database error!");
-/*} catch (mysqli_sql_exception) {
-    http_response_code(500);
-    die("<h1>Internal server error</h1><p>500</p>");
-}*/
-$baza = mysqli_connect("localhost", "root", "", "chatobahn");
 
 session_start();
 // startujemy sesje
