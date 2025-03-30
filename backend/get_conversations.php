@@ -11,7 +11,7 @@ if (!isset($_SESSION['id'])) {
 $id = $_SESSION['id'];
 
 
-// what the hell is this shit
+// a very long query
 $msgs = $baza->query(
     // okay let's do this:
     "SELECT convos.id,
