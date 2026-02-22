@@ -247,7 +247,6 @@ ALTER TABLE `conversation_members`
 -- Constraints for table `deleted_messages`
 --
 ALTER TABLE `deleted_messages`
-  ADD CONSTRAINT `deleted_messages_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`),
   ADD CONSTRAINT `deleted_messages_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`);
 
 --

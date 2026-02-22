@@ -18,8 +18,9 @@ $user = $user->fetch_assoc();
 
 if(!is_null($user['last_online']))
 {
-    $a = new DateTime('@' . strtotime($user['last_online']));
-    $b = $a->diff(new DateTime('now'));
+    $a = new DateTime($user['last_online'], new DateTimeZone("Europe/Warsaw"));
+    $now = new DateTime('now', new DateTimeZone("Europe/Warsaw"));
+    $b = $a->diff($now);
     echo timeFormat($b);
 }
 else

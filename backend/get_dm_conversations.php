@@ -73,8 +73,9 @@ foreach ($msgs as $msg) {
         echo "<p class='user_status'>";
 
         if (!is_null($user2['last_online'])) {
-            $a = new DateTime('@' . strtotime($user2['last_online']));
-            $b = $a->diff(new DateTime('now'));
+            $a = new DateTime($user2['last_online'], new DateTimeZone("Europe/Warsaw"));
+            $now = new DateTime('now', new DateTimeZone("Europe/Warsaw"));
+            $b = $a->diff($now);
             echo timeFormat($b);
         } else {
             echo "online";

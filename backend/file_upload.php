@@ -54,7 +54,10 @@ foreach($files as $uploadedFile)
 }
 
 if (!$exits) {;
-    file_put_contents($path, $fData);
+    if(!file_put_contents($path, $fData))
+    {
+        die("failed writing file $path");
+    }
 }
 
 $fullName = explode('/', $path);

@@ -60,19 +60,19 @@ function InitializeChat() {
             msg.innerText = stripHtml(msgData.getElementsByClassName("last_message")[0].innerHTML);
             //msg.innerText = msgData.getElementsByClassName("last_message")[0].innerText;
             message.appendChild(msg);
-
+            
             let time = document.createElement("span");
             time.innerText = msgData.getElementsByClassName("last_message_time")[0].innerText;
             message.appendChild(time);
-
+            
             let dm_id = msgData.getElementsByClassName("dm_id")[0].innerText;
-
+            
             let user_id = msgData.getElementsByClassName("user_id")[0].innerText;
-
+            
             let blockButton = document.createElement("button");
             blockButton.classList.add("block_button");
             blockButton.type = "button";
-
+            
             blockButton.innerText = "Block";
             blockButton.onclick = e => {
                 e.preventDefault();
@@ -80,7 +80,7 @@ function InitializeChat() {
                 if (window.confirm(`Are you sure you want to block ${name.innerText}?`)) {
                     let xhr = new XMLHttpRequest();
                     xhr.open("POST", "backend/block_user.php", true);
-
+                    
                     xhr.onload = () => {
                         if (xhr.status === 200) {
                             if (xhr.responseText === "1") {
@@ -99,13 +99,13 @@ function InitializeChat() {
                             console.log(xhr.responseText);
                         }
                     }
-
+                    
                     let args = new FormData();
                     args.append("blocked_user_id", user_id);
                     xhr.send(args);
                 }
             }
-
+            
             if (msgData.getElementsByClassName("blocked").length > 0) {
                 if (msgData.getElementsByClassName("blocked")[0].innerText === "you blocked") {
                     blockButton.innerText = "Unblock";
@@ -116,7 +116,7 @@ function InitializeChat() {
                         if (window.confirm(`Are you sure you want to unblock ${name.innerText}?`)) {
                             let xhr = new XMLHttpRequest();
                             xhr.open("POST", "backend/unblock_user.php", true);
-
+                            
                             xhr.onload = () => {
                                 if (xhr.status === 200) {
                                     if (xhr.responseText === "1") {
@@ -132,7 +132,7 @@ function InitializeChat() {
                                     console.log(xhr.responseText);
                                 }
                             }
-
+                            
                             let args = new FormData();
                             args.append("blocked_user_id", user_id);
                             xhr.send(args);
@@ -140,22 +140,22 @@ function InitializeChat() {
                     }
                 }
             }
-
+            
             message.appendChild(blockButton);
-
+            
             message.onclick = () => { loadDirectChat(dm_id, name.innerText); };
-
+            
             let table = content.firstChild;
             table.appendChild(document.createElement("tr"));
             table.lastChild.appendChild(document.createElement("td"));
             table.lastChild.lastChild.appendChild(message);
-
+            
         }
-
+        
         let newConversation = document.createElement("div");
         newConversation.classList.add("messages");
         newConversation.appendChild(document.createElement("form"));
-
+        
         newConversation.firstChild.innerHTML = "<p style='color: #3ba0e6;'>Type the user login to start a new conversation</p>";
         let input = document.createElement("input");
         input.name = "login";
@@ -165,12 +165,12 @@ function InitializeChat() {
         let button = document.createElement("button");
         button.innerText = "Start Conversation";
         newConversation.firstChild.appendChild(button);
-
+        
         newConversation.firstChild.onsubmit = e => {
             e.preventDefault();
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "backend/new_dm.php", true);
-
+            
             xhr.onload = () => {
                 console.log(xhr.response);
                 if (xhr.status === 403) {
@@ -188,30 +188,30 @@ function InitializeChat() {
                     }
                     else if (xhr.responseText === "2") {
                         sendErrorMsg("Already started the conversation!");
-
+                        
                     }
                     else {
                         sendErrorMsg("Internal server error.");
-
+                        
                     }
                 }
                 else {
                     sendErrorMsg("Internal error.");
-
+                    
                 }
             }
-
-
+            
+            
             let args = new FormData(e.target);
             xhr.send(args);
             input.value = "";
         }
-
+        
         let table = content.firstChild;
         table.appendChild(document.createElement("tr"));
         table.lastChild.appendChild(document.createElement("td"));
         table.lastChild.lastChild.appendChild(newConversation);
-
+        
         intervals['updateStatus'] = setInterval(updateStatus, keepOnlineInterval);
 
     };
@@ -388,21 +388,21 @@ function checkNewMessages() {
             content.firstChild.appendChild(document.createElement("tr"));
             content.firstChild.lastChild.appendChild(document.createElement("td"));
         }
-
+        
         let newMesages = 0;
         let yourMessage = false;
         for (let m of conversation.data.firstChild.childNodes) {
             let msgData = new BackendData(m.outerHTML);
             newMesages++;
-            if (document.getElementById(msgData.data.firstChild.id) !== undefined) {
+            if (document.getElementById(msgData.data.firstChild.id) !== null) {
                 continue;
             }
-
+            
             let replyId = msgData.getDataClass("reply_id");
             if (replyId) {
                 replyId = `msg_${replyId.innerText}`;
             }
-
+            
             let message;
             if (msgData.getDataClass("sender").innerText === "you") {
                 yourMessage = true;
@@ -411,14 +411,14 @@ function checkNewMessages() {
             else {
                 message = getNewMessage(stripHtml(msgData.getDataClass("message").innerHTML), msgData.data.firstChild.id, "left", msgData.getDataClass("time").innerText, true, wasScrolledToBottomBefore, replyId);
             }
-
+            
             let table = content.firstChild;
             table.appendChild(document.createElement("tr"));
             table.lastChild.appendChild(document.createElement("td"));
             table.lastChild.lastChild.appendChild(message);
         }
         last_time = getTimestamp()
-
+        
         // scroll to last time span element
         if (newMesages === 0) {
             return;
@@ -505,7 +505,7 @@ function sendDirectMessage(message, customElement = undefined, fileNameReference
                     sendErrorMsg(`Could not send the message.`);
                     console.log(xhr.response);
                 }
-
+                
                 let messageElement;
                 if (customElement) {
                     messageElement = customElement;
@@ -513,11 +513,11 @@ function sendDirectMessage(message, customElement = undefined, fileNameReference
                 else {
                     messageElement = getNewMessage(message, "msg_" + xhr.response.replace("g", ""), "right", undefined, true, true, replyId);
                 }
-
+                
                 if (replyId) {
                     document.body.removeChild(document.getElementsByClassName("reply_preview")[0]);
                 }
-
+                
                 content.firstChild.appendChild(document.createElement("tr"));
                 content.firstChild.lastChild.appendChild(document.createElement("td"));
                 content.getElementsByTagName("table")[0].lastChild.appendChild(messageElement);

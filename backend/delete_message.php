@@ -5,7 +5,7 @@ require_once "../connect.php";
 sprawdzCzyZalogowany();
 
 if (!isset($_POST['id'])) {
-    die("No files");
+    die("No message provided!");
 }
 
 $checkId = $baza->query("SELECT sender_id FROM messages WHERE id='$_POST[id]'")->fetch_assoc()['sender_id'];

@@ -1,7 +1,7 @@
 
 let maxEnlargedImageSize = 0.9;
 
-let VERSION = "1.01";
+let VERSION = "1.02";
 
 class BackendData {
     constructor(response) {
